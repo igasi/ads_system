@@ -1,0 +1,8 @@
+ads-system:
+  version: 1.x
+  css:
+  js:
+    js/ads-system.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
