@@ -5,4 +5,6 @@ ads-system:
     js/ads-system.js: {}
   dependencies:
     - core/jquery
+    - core/drupal
+    - core/jquery.once
     - core/drupalSettings
