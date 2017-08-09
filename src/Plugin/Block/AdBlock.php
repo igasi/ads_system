@@ -62,9 +62,6 @@ class AdBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function build() {
-
-    $config = \Drupal::config('ads_system.settings');
-
     $build = [
       '#markup' => '<div id="ad-' . $this->blockAdType . '" class="block-entity-ads ' . $this->blockAdType . '" ></div>',
       '#attached' => [

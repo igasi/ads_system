@@ -22,9 +22,6 @@ use Drupal\Core\Url;
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_ad(array &$variables) {
-  // Fetch Ad Entity Object.
-  $ad = $variables['elements']['#ad'];
-
   // Helpful $content variable for templates.
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];

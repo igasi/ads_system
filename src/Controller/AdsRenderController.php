@@ -77,7 +77,7 @@ class AdsRenderController extends ControllerBase {
   public function getAds(Request $request) {
     $ad_types = $request->request->get('adTypes');
     if (!isset($ad_types)) {
-      throw new BadRequestHttpException(t('No Ad Types specified.'));
+      throw new BadRequestHttpException($this->t('No Ad Types specified.'));
     }
 
     // Get Ad config.

@@ -92,9 +92,9 @@ class AdAddController extends ControllerBase {
    *   The page title.
    */
   public function getAddFormTitle(EntityInterface $ad_type) {
-    return t('Create of bundle @label',
-    ['@label' => $ad_type->label()]
-    );
+    return $this->t('Create of bundle @label',
+      ['@label' => $ad_type->label()]
+      );
   }
 
 }
