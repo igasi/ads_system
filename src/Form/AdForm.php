@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\Form\AdForm.
- */
-
 namespace Drupal\ads_system\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
@@ -16,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @ingroup ads_system
  */
 class AdForm extends ContentEntityForm {
+
   /**
    * {@inheritdoc}
    */

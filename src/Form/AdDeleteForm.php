@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\Form\AdDeleteForm.
- */
-
 namespace Drupal\ads_system\Form;
 
 use Drupal\Core\Entity\ContentEntityDeleteForm;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\Form\AdTypeForm.
- */
-
 namespace Drupal\ads_system\Form;
 
 use Drupal\Core\Entity\EntityForm;
@@ -16,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @package Drupal\ads_system\Form
  */
 class AdTypeForm extends EntityForm {
+
   /**
    * {@inheritdoc}
    */
@@ -23,23 +19,23 @@ class AdTypeForm extends EntityForm {
     $form = parent::form($form, $form_state);
 
     $ad_type = $this->entity;
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $ad_type->label(),
       '#description' => $this->t("Label for the Ad type."),
       '#required' => TRUE,
-    );
+    ];
 
-    $form['id'] = array(
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $ad_type->id(),
-      '#machine_name' => array(
+      '#machine_name' => [
         'exists' => '\Drupal\ads_system\Entity\AdType::load',
-      ),
+      ],
       '#disabled' => !$ad_type->isNew(),
-    );
+    ];
 
     /* You will need additional form elements for your custom properties. */
 
