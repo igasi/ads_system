@@ -1,68 +1,50 @@
 /**
- * Created by igasi on 4/5/16.
+ * @file Script Ads System.
  */
+(function ($, Drupal, drupalSettings) {
 
-/* Script Ads System.
- ========================================================================= */
+  'use strict';
 
-/*==DRUPAL BEHAVIOR ==*/
-(function ( $, Drupal, drupalSettings) {
+  function gatherAdsBlocks() {
+    var adTypes = [];
+    var blocks = $('.block-entity-ads');
 
-    // Ad system logic.
+    $.each(blocks, function (index, value) {
+      adTypes.push($(value).attr('id'));
+    });
 
-    function gatherAdsBlocks(){
+    return adTypes;
+  }
 
-        var adTypes = [];
-        var blocks = $(".block-entity-ads");
+  // Ad system init behavior.
+  Drupal.behaviors.adsSystem = {
+    attach: function (context, settings) {
+      var adTypes = gatherAdsBlocks();
 
-        $.each(blocks, function(index, value){
-            adTypes.push($(value).attr("id"));
+      // Load ads per blockType.
+      if (adTypes.length > 0) {
+        $.ajax({
+          url: Drupal.url('ads/getall'),
+          type: 'POST',
+          data: {'adTypes[]': adTypes},
+          dataType: 'json',
+          success: function (results) {
+            var screenW = screen.width;
+
+            $.each(results, function (blockType, adIds) {
+              $.each(adIds, function (adId, ad) {
+                if (screenW >= ad.breakpoint_min.size && screenW <= ad.breakpoint_max.size) {
+                  $('#' + blockType).text('').append(ad.render);
+                  $('#' + blockType + ' .ad')
+                    .css('width', ad.size.w + 'px');
+                }
+              });
+
+            });
+          }
         });
+      }
 
-        return adTypes;
     }
-
-
-
-    // Ad system init behavior.
-    Drupal.behaviors.adsSystem = {
-        attach: function (context, settings) {
-            //console.log("Added ads system js. Yay!!");
-            var $context = $(context);
-
-            var adTypes = gatherAdsBlocks();
-
-            // Load ads per blockType.
-            if (adTypes.length > 0) {
-                $.ajax({
-                    url: Drupal.url('ads/getall'),
-                    type: 'POST',
-                    data: {'adTypes[]': adTypes},
-                    dataType: 'json',
-                    success: function (results) {
-                        var screenW = screen.width;
-
-                        $.each(results, function(blockType, adIds){
-
-                            $.each(adIds, function(adId, ad){
-
-                                if (screenW >= ad.breakpoint_min.size && screenW <= ad.breakpoint_max.size){
-                                    $("#" + blockType).text("").append( ad.render );
-                                    $("#" + blockType + " .ad")
-                                        .css("width", ad.size.w + "px" );
-                                    //.css("height", ad.size.h + "px" );
-                                }
-                            });
-
-                        });
-
-
-                    }
-                });
-            }
-
-        }
-    };
-
-})( jQuery, Drupal, drupalSettings);
-/*== end behavior ==*/
+  };
+})(jQuery, Drupal, drupalSettings);
