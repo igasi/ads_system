@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\Plugin\Block\AdBlock.
- */
-
 namespace Drupal\ads_system\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
@@ -24,7 +19,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AdBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var $blockAdType
+   * Defining the block Ad Type by Derivative.
+   *
+   * @var blockAdType
+   *   Current Ad Type by derivative.
    */
   protected $blockAdType;
 
@@ -60,23 +58,20 @@ class AdBlock extends BlockBase implements ContainerFactoryPluginInterface {
     );
   }
 
-
-
   /**
    * {@inheritdoc}
    */
   public function build() {
 
-    $config =  \Drupal::config('ads_system.settings');
+    $config = \Drupal::config('ads_system.settings');
 
     $build = [
-//      '#markup' => '<div id="ad-' . $this->blockAdType . '" class="block-entity-ads ' . $this->blockAdType . '" >' . $this->blockAdType . '</div>',
       '#markup' => '<div id="ad-' . $this->blockAdType . '" class="block-entity-ads ' . $this->blockAdType . '" ></div>',
-      '#attached' => array(
-        'library' =>  array(
-            'ads_system/ads-system'
-        )
-      )
+      '#attached' => [
+        'library' => [
+          'ads_system/ads-system',
+        ],
+      ],
     ];
 
     return $build;
