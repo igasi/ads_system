@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\AdListBuilder.
- */
-
 namespace Drupal\ads_system;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -12,14 +7,15 @@ use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Routing\LinkGeneratorTrait;
 use Drupal\Core\Url;
 
-
 /**
  * Defines a class to build a listing of Ad entities.
  *
  * @ingroup ads_system
  */
 class AdListBuilder extends EntityListBuilder {
+
   use LinkGeneratorTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -42,9 +38,9 @@ class AdListBuilder extends EntityListBuilder {
     $row['name'] = $this->l(
       $entity->label(),
       new Url(
-        'entity.ad.edit_form', array(
+        'entity.ad.edit_form', [
           'ad' => $entity->id(),
-        )
+        ]
       )
     );
 
@@ -60,37 +56,42 @@ class AdListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $build['table'] = array(
-        '#type' => 'table',
-        '#header' => $this->buildHeader(),
-        '#title' => $this->getTitle(),
-        '#rows' => array(),
-        '#empty' => $this->t('There is no @label yet.', array('@label' => $this->entityType->getLabel())),
-        '#cache' => [
-            'contexts' => $this->entityType->getListCacheContexts(),
-            'tags' => $this->entityType->getListCacheTags(),
-        ],
-        '#responsive' => TRUE,
-        '#sticky' => TRUE,
-    );
+    $build['table'] = [
+      '#type' => 'table',
+      '#header' => $this->buildHeader(),
+      '#title' => $this->getTitle(),
+      '#rows' => [],
+      '#empty' => $this->t('There is no @label yet.', ['@label' => $this->entityType->getLabel()]),
+      '#cache' => [
+        'contexts' => $this->entityType->getListCacheContexts(),
+        'tags' => $this->entityType->getListCacheTags(),
+      ],
+      '#responsive' => TRUE,
+      '#sticky' => TRUE,
+    ];
+
     foreach ($this->load() as $entity) {
       if ($row = $this->buildRow($entity)) {
         $build['table']['#rows'][$entity->id()] = $row;
       }
     }
+
     // Sort rows by type.
-    $build['table']['#rows'] = $this->array_sort($build['table']['#rows'], 'type', SORT_ASC);
+    $build['table']['#rows'] = $this->arraySort($build['table']['#rows'], 'type', SORT_ASC);
 
     // Only add the pager if a limit is specified.
     if ($this->limit) {
-      $build['pager'] = array(
-          '#type' => 'pager',
-      );
+      $build['pager'] = [
+        '#type' => 'pager',
+      ];
     }
     return $build;
   }
 
-  private function array_sort($array, $on, $order=SORT_ASC){
+  /**
+   * Sort rows by type.
+   */
+  private function arraySort($array, $on, $order = SORT_ASC) {
     $new_array = [];
     $sortable_array = [];
 
@@ -102,7 +103,8 @@ class AdListBuilder extends EntityListBuilder {
               $sortable_array[$k] = $v2;
             }
           }
-        } else {
+        }
+        else {
           $sortable_array[$k] = $v;
         }
       }
@@ -111,6 +113,7 @@ class AdListBuilder extends EntityListBuilder {
         case SORT_ASC:
           asort($sortable_array);
           break;
+
         case SORT_DESC:
           arsort($sortable_array);
           break;
@@ -122,6 +125,6 @@ class AdListBuilder extends EntityListBuilder {
     }
 
     return $new_array;
- }
+  }
 
 }

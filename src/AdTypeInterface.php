@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\AdTypeInterface.
- */
-
 namespace Drupal\ads_system;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;

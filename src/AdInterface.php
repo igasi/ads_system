@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\AdInterface.
- */
-
 namespace Drupal\ads_system;
 
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -17,7 +12,7 @@ use Drupal\user\EntityOwnerInterface;
  * @ingroup ads_system
  */
 interface AdInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
-  // Add get/set methods for your configuration properties here.
+
   /**
    * Gets the Ad type.
    *

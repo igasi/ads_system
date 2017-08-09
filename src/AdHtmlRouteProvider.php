@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\AdHtmlRouteProvider.
- */
-
 namespace Drupal\ads_system;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -18,6 +13,7 @@ use Symfony\Component\Routing\Route;
  * @see Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider
  */
 class AdHtmlRouteProvider extends AdminHtmlRouteProvider {
+
   /**
    * {@inheritdoc}
    */

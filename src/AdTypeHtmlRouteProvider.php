@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\AdTypeHtmlRouteProvider.
- */
-
 namespace Drupal\ads_system;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -18,6 +13,7 @@ use Symfony\Component\Routing\Route;
  * @see Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider
  */
 class AdTypeHtmlRouteProvider extends AdminHtmlRouteProvider {
+
   /**
    * {@inheritdoc}
    */
@@ -108,15 +104,14 @@ class AdTypeHtmlRouteProvider extends AdminHtmlRouteProvider {
    */
   protected function getSettingsFormRoute(EntityTypeInterface $entity_type) {
 
-
     $route = new Route("/admin/structure/ad-types/settings");
     $route
-        ->setDefaults([
-            '_form' => 'Drupal\ads_system\Form\AdSettingsForm',
-            '_title' => "{$entity_type->getLabel()} settings",
-        ])
-        ->setRequirement('_permission', $entity_type->getAdminPermission())
-        ->setOption('_admin_route', TRUE);
+      ->setDefaults([
+        '_form' => 'Drupal\ads_system\Form\AdSettingsForm',
+        '_title' => "{$entity_type->getLabel()} settings",
+      ])
+      ->setRequirement('_permission', $entity_type->getAdminPermission())
+      ->setOption('_admin_route', TRUE);
 
     return $route;
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\AdAccessControlHandler.
- */
-
 namespace Drupal\ads_system;
 
 use Drupal\Core\Entity\EntityAccessControlHandler;
@@ -18,6 +13,7 @@ use Drupal\Core\Access\AccessResult;
  * @see \Drupal\ads_system\Entity\Ad.
  */
 class AdAccessControlHandler extends EntityAccessControlHandler {
+
   /**
    * {@inheritdoc}
    */
