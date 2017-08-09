@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\Entity\AdType.
- */
-
 namespace Drupal\ads_system\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;

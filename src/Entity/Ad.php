@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\Entity\Ad.
- */
-
 namespace Drupal\ads_system\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -66,19 +61,21 @@ class Ad extends ContentEntityBase implements AdInterface {
   use EntityChangedTrait;
 
   /**
+   * Managing the config.
    *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   *   An immutable configuration object.
    */
   protected $config;
-
 
   /**
    * {@inheritdoc}
    */
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
-    $values += array(
+    $values += [
       'user_id' => \Drupal::currentUser()->id(),
-    );
+    ];
   }
 
   /**
@@ -164,33 +161,42 @@ class Ad extends ContentEntityBase implements AdInterface {
   }
 
   /**
+   * Getting Ad sizes.
+   *
    * @return mixed
+   *   Values of the sizes.
    */
-  public function getSize(){
+  public function getSize() {
 
-    $config =  \Drupal::config('ads_system.settings');
+    $config = \Drupal::config('ads_system.settings');
     $ad_sizes = explode("\r\n", $config->get('ad_sizes'));
 
-    return $ad_sizes[(int)$this->values['size']['x-default']];
+    return $ad_sizes[(int) $this->values['size']['x-default']];
   }
 
   /**
+   * Getting the Breakpoint minimum.
+   *
    * @return mixed
+   *   The current breakpoint min usable for Ad.
    */
-  public function getBreakpointMin(){
+  public function getBreakpointMin() {
 
-    $config =  \Drupal::config('ads_system.settings');
+    $config = \Drupal::config('ads_system.settings');
     $ad_breakpoints = explode("\r\n", $config->get('ad_breakpoints'));
 
     return $ad_breakpoints[$this->get('breakpoint_min')->value];
   }
 
   /**
+   * Getting the Breakpoint maximum.
+   *
    * @return mixed
+   *   The current breakpoint max usable for Ad.
    */
-  public function getBreakpointMax(){
+  public function getBreakpointMax() {
 
-    $config =  \Drupal::config('ads_system.settings');
+    $config = \Drupal::config('ads_system.settings');
     $ad_breakpoints = explode("\r\n", $config->get('ad_breakpoints'));
 
     return $ad_breakpoints[$this->get('breakpoint_max')->value];
@@ -223,41 +229,21 @@ class Ad extends ContentEntityBase implements AdInterface {
       ->setSetting('handler', 'default')
       ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
       ->setTranslatable(TRUE)
-//      ->setDisplayOptions('view', array(
-//        'label' => 'hidden',
-//        'type' => 'author',
-//        'weight' => 0,
-//      ))
-//      ->setDisplayOptions('form', array(
-//        'type' => 'entity_reference_autocomplete',
-//        'weight' => 5,
-//        'settings' => array(
-//          'match_operator' => 'CONTAINS',
-//          'size' => '60',
-//          'autocomplete_type' => 'tags',
-//          'placeholder' => '',
-//        ),
-//      ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Ad entity.'))
-      ->setSettings(array(
+      ->setSettings([
         'max_length' => 50,
         'text_processing' => 0,
-      ))
+      ])
       ->setDefaultValue('')
-//      ->setDisplayOptions('view', array(
-//        'label' => 'hidden',
-//        'type' => 'string',
-//        'weight' => -4,
-//      ))
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'string_textfield',
         'weight' => -4,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
@@ -269,10 +255,10 @@ class Ad extends ContentEntityBase implements AdInterface {
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
       ->setDescription(t('The language code for the Ad entity.'))
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'language_select',
         'weight' => 10,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -283,87 +269,87 @@ class Ad extends ContentEntityBase implements AdInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
 
-    // Get Ad config
-    $config =  \Drupal::config('ads_system.settings');
+    // Get Ad config.
+    $config = \Drupal::config('ads_system.settings');
 
     $fields['size'] = BaseFieldDefinition::create('list_string')
-        ->setLabel(t('Size'))
-        ->setDescription(t('The size of the Ad entity.'))
-        ->setSettings(array(
-            'max_length' => 50,
-            'text_processing' => 0,
-            'allowed_values' => explode("\r\n", $config->get('ad_sizes')),
-        ))
-        ->setDefaultValue('')
-        ->setRequired(TRUE)
-        ->setDisplayOptions('form', array(
-            'type' => 'options_select',
-            'settings' => array(
-                'display_label' => TRUE
-            ),
-            'weight' => -4,
-        ))
-        ->setDisplayConfigurable('form', TRUE);
+      ->setLabel(t('Size'))
+      ->setDescription(t('The size of the Ad entity.'))
+      ->setSettings([
+        'max_length' => 50,
+        'text_processing' => 0,
+        'allowed_values' => explode("\r\n", $config->get('ad_sizes')),
+      ])
+      ->setDefaultValue('')
+      ->setRequired(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+        'weight' => -4,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['breakpoint_min'] = BaseFieldDefinition::create('list_string')
-        ->setLabel(t('Breakpoint min'))
-        ->setDescription(t('The breakpoint min of the Ad entity.'))
-        ->setSettings(array(
-            'max_length' => 50,
-            'text_processing' => 0,
-            'allowed_values' => explode("\r\n", $config->get('ad_breakpoints')),
-        ))
-        ->setDefaultValue('')
-        ->setRequired(TRUE)
-        ->setDisplayOptions('form', array(
-            'type' => 'options_select',
-            'settings' => array(
-                'display_label' => TRUE
-            ),
-            'weight' => -4,
-        ))
-        ->setDisplayConfigurable('form', TRUE);
+      ->setLabel(t('Breakpoint min'))
+      ->setDescription(t('The breakpoint min of the Ad entity.'))
+      ->setSettings([
+        'max_length' => 50,
+        'text_processing' => 0,
+        'allowed_values' => explode("\r\n", $config->get('ad_breakpoints')),
+      ])
+      ->setDefaultValue('')
+      ->setRequired(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+        'weight' => -4,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['breakpoint_max'] = BaseFieldDefinition::create('list_string')
-        ->setLabel(t('Breakpoint max'))
-        ->setDescription(t('The breakpoint max of the Ad entity.'))
-        ->setSettings(array(
-            'max_length' => 50,
-            'text_processing' => 0,
-            'allowed_values' => explode("\r\n", $config->get('ad_breakpoints')),
-        ))
-        ->setDefaultValue('')
-        ->setRequired(TRUE)
-        ->setDisplayOptions('form', array(
-            'type' => 'options_select',
-            'settings' => array(
-                'display_label' => TRUE
-            ),
-            'weight' => -4,
-        ))
-        ->setDisplayConfigurable('form', TRUE);
+      ->setLabel(t('Breakpoint max'))
+      ->setDescription(t('The breakpoint max of the Ad entity.'))
+      ->setSettings([
+        'max_length' => 50,
+        'text_processing' => 0,
+        'allowed_values' => explode("\r\n", $config->get('ad_breakpoints')),
+      ])
+      ->setDefaultValue('')
+      ->setRequired(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+        'weight' => -4,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['ad_script'] = BaseFieldDefinition::create('text_long')
-        ->setLabel(t('Ad Script'))
-        ->setDescription(t('Ad Script to render'))
-        ->setSettings(array(
-            'text_processing' => 1,
-        ))
-        ->setDefaultValue('')
-        ->setDisplayOptions('view', array(
-            'label' => 'hidden',
-            'type' => 'string',
-            'weight' => 0,
-        ))
-        ->setDisplayOptions('form', array(
-            'type' => 'text_textarea',
-            'weight' => 0,
-            'settings' => [
-                'rows' => 10
-            ]
-        ))
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayConfigurable('view', TRUE);
+      ->setLabel(t('Ad Script'))
+      ->setDescription(t('Ad Script to render'))
+      ->setSettings([
+        'text_processing' => 1,
+      ])
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'text_textarea',
+        'weight' => 0,
+        'settings' => [
+          'rows' => 10,
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }
