@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\ads_system\Controller\AdsRenderController.
- */
-
 namespace Drupal\ads_system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -15,8 +10,6 @@ use Drupal\Core\Form\FormAjaxResponseBuilder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Drupal\Core\Render\HtmlResponse;
-use Drupal\Core\Render\Renderer ;
 
 /**
  * Class AdsRenderController.
@@ -30,7 +23,7 @@ class AdsRenderController extends ControllerBase {
    *
    * @var Drupal\Core\Entity\EntityManager
    */
-  protected $entity_manager;
+  protected $entityManager;
 
   /**
    * Drupal\Core\Entity\EntityManager definition.
@@ -43,24 +36,25 @@ class AdsRenderController extends ControllerBase {
   /**
    * Drupal\Core\Entity\Query\QueryFactory definition.
    *
-   * @var Drupal\Core\Entity\Query\QueryFactory::getViewBuilder('ad')
+   * @var Drupal\Core\Entity\Query\QueryFactorygetViewBuilderad
    */
-  protected $entity_query;
+  protected $entityQuery;
 
   /**
    * Drupal\Core\Form\FormAjaxResponseBuilder definition.
    *
    * @var Drupal\Core\Form\FormAjaxResponseBuilder
    */
-  protected $form_ajax_response_builder;
+  protected $formAjaxResponseBuilder;
+
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityManager $entity_manager, QueryFactory $entity_query, FormAjaxResponseBuilder $form_ajax_response_builder) {
-    $this->entity_manager = $entity_manager;
-    $this->viewBuilder = $entity_manager->getViewBuilder('ad');
-    $this->entity_query = $entity_query;
-    $this->form_ajax_response_builder = $form_ajax_response_builder;
+  public function __construct(EntityManager $entityManager, QueryFactory $entityQuery, FormAjaxResponseBuilder $formAjaxResponseBuilder) {
+    $this->entity_manager = $entityManager;
+    $this->viewBuilder = $entityManager->getViewBuilder('ad');
+    $this->entity_query = $entityQuery;
+    $this->form_ajax_response_builder = $formAjaxResponseBuilder;
   }
 
   /**
@@ -86,22 +80,21 @@ class AdsRenderController extends ControllerBase {
       throw new BadRequestHttpException(t('No Ad Types specified.'));
     }
 
-
-    // Get Ad config
-    $config =  \Drupal::config('ads_system.settings');
+    // Get Ad config.
+    $config = \Drupal::config('ads_system.settings');
 
     $ad_sizes = explode("\r\n", $config->get('ad_sizes'));
     $ad_breakpoints = explode("\r\n", $config->get('ad_breakpoints'));
 
     $rendered = [];
 
-    foreach ($ad_types as $type){
-      $bundle = explode("-",$type);
+    foreach ($ad_types as $type) {
+      $bundle = explode("-", $type);
       $rendered[$type] = $this->entity_query->get('ad')
-          ->condition("type",$bundle[1])
-          ->execute();
+        ->condition("type", $bundle[1])
+        ->execute();
 
-      foreach ($rendered[$type] as $adId){
+      foreach ($rendered[$type] as $adId) {
         $ad = $this->entity_manager->getStorage('ad')->load($adId);
 
         $sizeInfo = explode("|", $ad_sizes[$ad->get('size')->value]);
@@ -113,23 +106,21 @@ class AdsRenderController extends ControllerBase {
           "size" => [
             'name' => $sizeInfo[0],
             'w' => $sizeInfo[1],
-            'h' => $sizeInfo[2]
+            'h' => $sizeInfo[2],
           ],
           "breakpoint_min" => [
             'name' => $breakpointsMinInfo[0],
-            'size' => $breakpointsMinInfo[1]
+            'size' => $breakpointsMinInfo[1],
           ],
           "breakpoint_max" => [
-              'name' => $breakpointsMaxInfo[0],
-              'size' => $breakpointsMaxInfo[1]
+            'name' => $breakpointsMaxInfo[0],
+            'size' => $breakpointsMaxInfo[1],
           ],
           "render" => render($this->viewBuilder->view($ad)),
         ];
       }
 
     }
-
-
 
     return new JsonResponse($rendered);
   }
